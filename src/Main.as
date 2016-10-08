@@ -3,6 +3,7 @@ package
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
+	
 	import screens.PrimaryScreen;
 	
 	/**
@@ -35,8 +36,7 @@ package
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
 				
-			var primaryScreen:PrimaryScreen = new PrimaryScreen();
-			addChild( primaryScreen );
+			addChild( new PrimaryScreen() );
 		}
 		
 	}

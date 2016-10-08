@@ -98,7 +98,8 @@ package components
 		private var acceleration:Number = 0;
 		private var shakeDelta:int = 0;
 		
-		private var slots:Array/* of Bitmap */ = [ null, null, null, null, null ];
+		private var slots:Array/* of Icon */ = [ null, null, null, null, null ];
+		private var _results:Array/* of Icon */ = [ null, null, null ];
 		
 	//-------------------------------------------------------------
 	//
@@ -143,14 +144,23 @@ package components
 		}
 		
 		/**
+		 * the current items
+		 * @return
+		 */
+		public function get results() : Array/* of String */
+		{
+			return _results;
+		}
+		
+		/**
 		 * current movement state of the disk
 		 */
-		public function get state() : String 
+		private function get state() : String 
 		{
 			return _state;
 		}
 		
-		public function set state( value:String ) : void
+		private function set state( value:String ) : void
 		{
 			_state = value;
 			
@@ -208,6 +218,20 @@ package components
 			}
 		}
 	
+		private function afterStop() : void
+		{
+			var delta:int = -1 * position / 100;
+			for ( var i:int = 0; i < 3; i++ )
+			{
+				var j:int = i + delta;
+				if ( 0 > j )
+				{
+					j = 5 + j;
+				}
+				_results[i] = slots[j];
+			}
+		}
+		
 		private function centring() : void
 		{
 			position = 100 * Math.round(position / 100);
@@ -240,6 +264,7 @@ package components
 			slots[ getEmptySlot() ] = ten;
 			slots[ getEmptySlot() ] = k;
 			slots[ getEmptySlot() ] = q;
+			
 		}
 		
 	//-------------------------------------------------------------
@@ -288,6 +313,7 @@ package components
 					{
 						centring();
 						state = STAY_STILL;
+						afterStop();
 					}
 					
 					break;

@@ -24,20 +24,32 @@ package components
 		{
 			super();
 			
-			addChild( disk1 );
 			disk1.speedLimit = 30;
+			addChild( disk1 );
 			
 			disk2.x = 100;
-			addChild( disk2 );
 			disk2.speedLimit = 40;
+			addChild( disk2 );
 			
 			disk3.x = 200;
-			addChild( disk3 );
 			disk3.speedLimit = 35;
+			addChild( disk3 );
 			
 			timer.addEventListener( TimerEvent.TIMER, timerHandler, false, 0, true );
 		}
 		
+	//-------------------------------------------------------------
+	//
+	//  Constants
+	//
+	//-------------------------------------------------------------	
+		
+		private const WIN_LINE_1:Array/* of int */ = [ 0, 0, 0 ];
+		private const WIN_LINE_2:Array/* of int */ = [ 1, 1, 1 ];
+		private const WIN_LINE_3:Array/* of int */ = [ 2, 2, 2 ];
+		private const WIN_LINE_4:Array/* of int */ = [ 0, 1, 2 ];
+		private const WIN_LINE_5:Array/* of int */ = [ 2, 1, 0 ];
+	
 	//-------------------------------------------------------------
 	//
 	//  Variables
@@ -51,6 +63,7 @@ package components
 		private var nextDisk:Disk = null;
 		private var timer:Timer = new Timer( 250 );
 		
+		private var _winCount:int = 0;
 		private var _areMoving:Boolean = false;
 		
 	//-------------------------------------------------------------
@@ -67,6 +80,14 @@ package components
 			return _areMoving;
 		}
 	
+		/**
+		 * how much are lines win?
+		 */
+		public function get winCount() : int
+		{
+			return _winCount;
+		}
+		
 	//-------------------------------------------------------------
 	//
 	//  Methods
@@ -98,6 +119,35 @@ package components
 				timer.start();
 			}
 		}
+		
+		private function afterStop() : void
+		{
+			timer.stop();
+			_areMoving = false;
+			
+			_winCount = 0;
+			checkWinLine( WIN_LINE_1 );
+			checkWinLine( WIN_LINE_2 );
+			checkWinLine( WIN_LINE_3 );
+			checkWinLine( WIN_LINE_4 );
+			checkWinLine( WIN_LINE_5 );
+		}
+		
+		private function checkWinLine( line:Array/* of int */ ) : void
+		{
+			return;
+			var icon1:Icon = disk1.results[ line[0] ];
+			var icon2:Icon = disk2.results[ line[1] ];
+			var icon3:Icon = disk3.results[ line[2] ];
+			if ( icon1.type == icon2.type && icon2.type == icon3.type )
+			{
+				_winCount++;
+				icon1.blink = true;
+				icon2.blink = true;
+				icon3.blink = true;
+			}
+			
+		}
 	
 	//-------------------------------------------------------------
 	//
@@ -128,8 +178,7 @@ package components
 				if ( disk3 == nextDisk )
 				{
 					disk3.stop();
-					timer.stop();
-					_areMoving = false;
+					afterStop();
 				}
 				
 				if ( disk2 == nextDisk )

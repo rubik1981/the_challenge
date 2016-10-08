@@ -23,8 +23,11 @@ package components
 		public function Icon() 
 		{
 			super();
+			
 			addChild( bitmap );
+			
 			addEventListener( MouseEvent.CLICK, clickHandler, false, 0, true );
+			
 			blinkTimer.addEventListener( TimerEvent.TIMER, blinkTimerHandler, false, 0, true );
 		}
 		
