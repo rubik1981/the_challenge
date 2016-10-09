@@ -1,11 +1,11 @@
-package components 
+package components.slotMachine 
 {
 	import flash.display.Sprite;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.events.MouseEvent;
 	
-	import components.Disk;
+	import components.slotMachine.Disk;
 	import events.SlotEvent;
 	
 	/**
@@ -29,11 +29,11 @@ package components
 			addChild( disk1 );
 			
 			disk2.x = 100;
-			disk2.speedLimit = 40;
+			disk2.speedLimit = 35;
 			addChild( disk2 );
 			
 			disk3.x = 200;
-			disk3.speedLimit = 35;
+			disk3.speedLimit = 40;
 			disk3.addEventListener( SlotEvent.DISK_WAS_STOPPED, disk3WasStoppedHandler, false, 0, true );
 			disk3.addEventListener( SlotEvent.DISK_WAS_STARTED, disk3WasStartedHandler, false, 0, true );
 			addChild( disk3 );
@@ -128,6 +128,7 @@ package components
 			timerNextDisk.stop();
 			_areMoving = true;
 			readyToStop = true;
+			dispatchEvent( new SlotEvent(SlotEvent.DISKS_WERE_STARTED) );
 		}
 		
 		private function afterStop() : void

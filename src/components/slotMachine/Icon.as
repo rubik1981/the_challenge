@@ -1,4 +1,4 @@
-package components 
+package components.slotMachine 
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;

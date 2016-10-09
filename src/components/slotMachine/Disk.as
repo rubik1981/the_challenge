@@ -1,4 +1,4 @@
-package components 
+package components.slotMachine 
 {
 	import events.SlotEvent;
 	import flash.display.Bitmap;
@@ -143,7 +143,7 @@ package components
 		 * the current items
 		 * @return
 		 */
-		public function get results() : Array/* of String */
+		public function get results() : Array/* of Icon */
 		{
 			return _results;
 		}
@@ -183,6 +183,7 @@ package components
 				case SHAKES:
 					speed = 0;
 					acceleration = 1;
+					Embeded.playSound( Embeded.STOP );
 					break;
 					
 			}
@@ -251,6 +252,17 @@ package components
 	
 		private function fillSlots() : void
 		{
+			/*
+			// if you want up to three win line at one time
+			slots[ 0 ] = a;
+			slots[ 1 ] = j;
+			slots[ 2 ] = ten;
+			slots[ 3 ] = k;
+			slots[ 4 ] = q;
+			
+			return;
+			*/
+			
 			slots[ getEmptySlot() ] = a;
 			slots[ getEmptySlot() ] = j;
 			slots[ getEmptySlot() ] = ten;
