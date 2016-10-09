@@ -6,6 +6,7 @@ package components
 	import flash.events.MouseEvent;
 	
 	import components.Disk;
+	import events.SlotEvent;
 	
 	/**
 	 * just three disks together
@@ -33,9 +34,12 @@ package components
 			
 			disk3.x = 200;
 			disk3.speedLimit = 35;
+			disk3.addEventListener( SlotEvent.DISK_WAS_STOPPED, disk3WasStoppedHandler, false, 0, true );
+			disk3.addEventListener( SlotEvent.DISK_WAS_STARTED, disk3WasStartedHandler, false, 0, true );
 			addChild( disk3 );
 			
-			timer.addEventListener( TimerEvent.TIMER, timerHandler, false, 0, true );
+			timerNextDisk.addEventListener( TimerEvent.TIMER, timerHandler, false, 0, true );
+			autoStopTimer.addEventListener( TimerEvent.TIMER, autoStopTimerHandler, false, 0, true );
 		}
 		
 	//-------------------------------------------------------------
@@ -56,15 +60,18 @@ package components
 	//
 	//-------------------------------------------------------------	
 		
-		private var disk1:Disk = new Disk();
-		private var disk2:Disk = new Disk();
-		private var disk3:Disk = new Disk();
+		protected var disk1:Disk = new Disk();
+		protected var disk2:Disk = new Disk();
+		protected var disk3:Disk = new Disk();
 		
 		private var nextDisk:Disk = null;
-		private var timer:Timer = new Timer( 250 );
+		private var timerNextDisk:Timer = new Timer( 250 );
+		private var autoStopTimer:Timer = new Timer( 5000 );
 		
-		private var _winCount:int = 0;
 		private var _areMoving:Boolean = false;
+		
+		protected var readyToStart:Boolean = true;
+		protected var readyToStop:Boolean = false;
 		
 	//-------------------------------------------------------------
 	//
@@ -80,14 +87,6 @@ package components
 			return _areMoving;
 		}
 	
-		/**
-		 * how much are lines win?
-		 */
-		public function get winCount() : int
-		{
-			return _winCount;
-		}
-		
 	//-------------------------------------------------------------
 	//
 	//  Methods
@@ -99,11 +98,13 @@ package components
 		 */
 		public function go() : void
 		{
-			if ( false == timer.running )
+			if ( true == readyToStart )
 			{
+				readyToStart = false;
 				disk1.go();
 				nextDisk = disk2;
-				timer.start();
+				timerNextDisk.start();
+				autoStopTimer.start();
 			}
 		}
 		
@@ -111,42 +112,30 @@ package components
 		 * stops the rotation of disks
 		 */
 		public function stop() : void
-		{
-			if ( false == timer.running )
+		{			
+			if ( true == readyToStop )
 			{
+				readyToStop = false;
+				autoStopTimer.stop();
 				disk1.stop();
 				nextDisk = disk2;
-				timer.start();
+				timerNextDisk.start();
 			}
+		}
+		
+		private function afterStart() : void
+		{
+			timerNextDisk.stop();
+			_areMoving = true;
+			readyToStop = true;
 		}
 		
 		private function afterStop() : void
 		{
-			timer.stop();
+			timerNextDisk.stop();
 			_areMoving = false;
-			
-			_winCount = 0;
-			checkWinLine( WIN_LINE_1 );
-			checkWinLine( WIN_LINE_2 );
-			checkWinLine( WIN_LINE_3 );
-			checkWinLine( WIN_LINE_4 );
-			checkWinLine( WIN_LINE_5 );
-		}
-		
-		private function checkWinLine( line:Array/* of int */ ) : void
-		{
-			return;
-			var icon1:Icon = disk1.results[ line[0] ];
-			var icon2:Icon = disk2.results[ line[1] ];
-			var icon3:Icon = disk3.results[ line[2] ];
-			if ( icon1.type == icon2.type && icon2.type == icon3.type )
-			{
-				_winCount++;
-				icon1.blink = true;
-				icon2.blink = true;
-				icon3.blink = true;
-			}
-			
+			readyToStart = true;
+			dispatchEvent( new SlotEvent(SlotEvent.DISKS_WERE_STOPPED) );
 		}
 	
 	//-------------------------------------------------------------
@@ -156,6 +145,21 @@ package components
 	//-------------------------------------------------------------	
 		
 	
+		private function autoStopTimerHandler( event:TimerEvent ) : void
+		{
+			stop();
+		}
+	
+		private function disk3WasStoppedHandler( event:SlotEvent ) : void
+		{
+			afterStop();
+		}
+		
+		private function disk3WasStartedHandler( event:SlotEvent ) : void
+		{
+			afterStart();
+		}
+	
 		private function timerHandler( event:TimerEvent ) : void
 		{
 			if ( false == areMoving )
@@ -163,8 +167,6 @@ package components
 				if ( disk3 == nextDisk )
 				{
 					disk3.go();
-					timer.stop();
-					_areMoving = true;
 				}
 				
 				if ( disk2 == nextDisk )
@@ -178,7 +180,6 @@ package components
 				if ( disk3 == nextDisk )
 				{
 					disk3.stop();
-					afterStop();
 				}
 				
 				if ( disk2 == nextDisk )
@@ -189,6 +190,8 @@ package components
 			}
 		}
 	
+		
+		
 	}
 
 }

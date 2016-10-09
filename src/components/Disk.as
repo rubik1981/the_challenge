@@ -1,5 +1,6 @@
 package components 
 {
+	import events.SlotEvent;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.display.GradientType;
@@ -66,7 +67,6 @@ package components
 			fillSlots();
 			
 			addEventListener( Event.ENTER_FRAME, enterFrameHandler, false, 0, true );
-			addEventListener( MouseEvent.CLICK, clickHandler, false, 0, true );
 		}
 		
 	//-------------------------------------------------------------
@@ -80,26 +80,22 @@ package components
 		 */
 		public var speedLimit:int = 40;
 	
-		/**
-		 * current speed of the rotation
-		 */
-		private var speed:Number = 0;
 		
 		
 		private var _state:String = STAY_STILL;
 		private var _position:int = 0;
-	
+		private var _results:Array/* of Icon */ = [ null, null, null ];
+
+		private var acceleration:Number = 0;
+
 		private var a:Icon = Embeded.getImage( Embeded.A );
 		private var j:Icon = Embeded.getImage( Embeded.J ); 
 		private var k:Icon = Embeded.getImage( Embeded.K );
 		private var ten:Icon = Embeded.getImage( Embeded.TEN );
 		private var q:Icon = Embeded.getImage( Embeded.Q );
 		
-		private var acceleration:Number = 0;
-		private var shakeDelta:int = 0;
-		
+		private var speed:Number = 0;
 		private var slots:Array/* of Icon */ = [ null, null, null, null, null ];
-		private var _results:Array/* of Icon */ = [ null, null, null ];
 		
 	//-------------------------------------------------------------
 	//
@@ -177,6 +173,7 @@ package components
 					
 				case IN_MOTION:
 					acceleration = 0;
+					dispatchEvent( new SlotEvent(SlotEvent.DISK_WAS_STARTED) );
 					break;
 					
 				case SLOWS_DOWN:
@@ -186,7 +183,6 @@ package components
 				case SHAKES:
 					speed = 0;
 					acceleration = 1;
-					shakeDelta = 0;
 					break;
 					
 			}
@@ -204,7 +200,10 @@ package components
 		 */
 		public function go() : void
 		{
-			state = BEGIN_MOVEMENT;
+			if ( STAY_STILL == state )
+			{
+				state = BEGIN_MOVEMENT;
+			}
 		}
 		
 		/**
@@ -230,6 +229,7 @@ package components
 				}
 				_results[i] = slots[j];
 			}
+			dispatchEvent( new SlotEvent(SlotEvent.DISK_WAS_STOPPED) );
 		}
 		
 		private function centring() : void
@@ -251,20 +251,11 @@ package components
 	
 		private function fillSlots() : void
 		{
-			//clear previous 
-			slots[ 0 ] = null;
-			slots[ 1 ] = null;
-			slots[ 2 ] = null;
-			slots[ 3 ] = null;
-			slots[ 4 ] = null;
-			
-			//fill news
 			slots[ getEmptySlot() ] = a;
 			slots[ getEmptySlot() ] = j;
 			slots[ getEmptySlot() ] = ten;
 			slots[ getEmptySlot() ] = k;
 			slots[ getEmptySlot() ] = q;
-			
 		}
 		
 	//-------------------------------------------------------------
@@ -272,11 +263,7 @@ package components
 	//  Event Listeners
 	//
 	//-------------------------------------------------------------	
-		
-		private function clickHandler( event:MouseEvent ) : void
-		{
-			trace( state, position, speed, acceleration );
-		}
+	
 	
 		private function enterFrameHandler( event:Event ) : void
 		{
@@ -302,6 +289,7 @@ package components
 							state = SHAKES;
 						}
 					}
+					break;
 					
 				case SHAKES:
 					if ( SHAKE_AMPLITUDE <= speed )
@@ -315,7 +303,6 @@ package components
 						state = STAY_STILL;
 						afterStop();
 					}
-					
 					break;
 					
 			}

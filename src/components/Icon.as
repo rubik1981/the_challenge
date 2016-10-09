@@ -76,6 +76,10 @@ package components
 			else
 			{
 				blinkTimer.stop();
+				if ( null == parent )
+				{
+					savedParent.addChild( this );
+				}
 			}
 		}
 	

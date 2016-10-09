@@ -7,7 +7,7 @@ package screens
 	import flash.ui.Keyboard;
 	
 	import components.Icon;
-	import components.SlotMachine;
+	import components.SlotMachineWL;
 	import embeded.Embeded;
 	
 	/**
@@ -43,7 +43,7 @@ package screens
 	//
 	//-------------------------------------------------------------	
 		
-		private var disks:SlotMachine = new SlotMachine();
+		private var disks:SlotMachineWL = new SlotMachineWL();
 			
 	//-------------------------------------------------------------
 	//
