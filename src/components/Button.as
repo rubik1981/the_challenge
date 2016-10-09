@@ -42,11 +42,11 @@ package components
 			tf.autoSize = TextFieldAutoSize.CENTER;
 			if ( false == isRed )
 			{
-				var color:uint = 0x0000FF;
+				var color:uint = 0xFFFF00;
 			}
 			else
 			{
-				color = 0xFF0000;
+				color = 0xFFFF00;
 			}
 			tf.setTextFormat( new TextFormat(null, 40, color, true) );
 			
@@ -75,18 +75,18 @@ package components
 			var upStateName:String;
 			if ( true == isRed )
 			{
-				upStateName = Embeded.GRAY_BUTTON;
+				upStateName = Embeded.RED_BUTTON;
 			}
 			else
 			{
-				upStateName = Embeded.GREEN_BUTTON;
+				upStateName = Embeded.GRAY_BUTTON;
 			}
 			
 			super(
 				createState( upStateName ),
 				createState( upStateName ),
-				createState( Embeded.RED_BUTTON ),
-				createState( Embeded.GRAY_BUTTON )
+				createState( Embeded.MALINA_BUTTON),
+				createState( Embeded.GREEN_BUTTON )
 				);
 			
 		}
