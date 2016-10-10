@@ -279,7 +279,6 @@ package components.slotMachine
 	
 		private function enterFrameHandler( event:Event ) : void
 		{
-			const SHAKE_AMPLITUDE:int = 5;
 			
 			switch ( state )
 			{
@@ -304,6 +303,8 @@ package components.slotMachine
 					break;
 					
 				case SHAKES:
+					const SHAKE_AMPLITUDE:int = 5;
+					
 					if ( SHAKE_AMPLITUDE <= speed )
 					{
 						acceleration = -1;

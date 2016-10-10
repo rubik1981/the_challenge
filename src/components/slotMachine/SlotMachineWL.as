@@ -37,7 +37,7 @@ package components.slotMachine
 	//
 	//-------------------------------------------------------------	
 		
-		private var winLines:Array/* of Array of Icon */;
+		private var winLines:Array/* of   Array of Icon */;
 		private var timerFinish:Timer = new Timer( 2000 );
 		private var timerMarkEach:Timer = new Timer( 1000 );
 		private var timerMarkNext:Timer = new Timer( 750 );

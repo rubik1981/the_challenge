@@ -26,8 +26,6 @@ package components.slotMachine
 			
 			addChild( bitmap );
 			
-			addEventListener( MouseEvent.CLICK, clickHandler, false, 0, true );
-			
 			blinkTimer.addEventListener( TimerEvent.TIMER, blinkTimerHandler, false, 0, true );
 		}
 		
@@ -107,10 +105,6 @@ package components.slotMachine
 			
 		}
 	
-		private function clickHandler( event:MouseEvent ) : void
-		{
-			//blink = !blink;
-		}
 	
 	}
 

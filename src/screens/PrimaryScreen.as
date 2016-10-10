@@ -1,9 +1,5 @@
 package screens 
 {
-	import com.adobe.tvsdk.mediacore.qos.QOSProvider;
-	import components.Edit;
-	import components.Message;
-	import components.slotMachine.Icon;
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
 	import flash.events.Event;
@@ -14,6 +10,9 @@ package screens
 	import flash.ui.Keyboard;
 	import flash.text.TextFieldAutoSize;
 	
+	import components.Edit;
+	import components.Message;
+	import components.slotMachine.Icon;
 	import components.Button;
 	import events.SlotEvent;
 	import components.slotMachine.SlotMachineWL;
@@ -87,7 +86,6 @@ package screens
 			addChild( iconSoundOn );
 			
 			balance = 150;
-			win = 0;
 			bet = 7;
 			
 			
@@ -110,7 +108,7 @@ package screens
 		
 		private var _balance:int;
 		private var _bet:int;
-		private var _win:int;
+		private var _win:int = 0;
 		
 	//-------------------------------------------------------------
 	//

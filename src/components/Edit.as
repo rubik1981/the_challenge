@@ -37,6 +37,7 @@ package components
 
 			addChild( tfValue );
 			
+			value = 0;
 		}
 		
 	//-------------------------------------------------------------
